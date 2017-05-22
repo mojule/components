@@ -1,0 +1,233 @@
+{
+  "id": "document",
+  "title": "HTML Document",
+  "type": "object",
+  "required": [
+    "title"
+  ],
+  "meta": {
+    "componentName": "document",
+    "transform": false
+  },
+  "default": {
+    "title": "Home",
+    "styles": [
+      {
+        "text": "body{ font-family: sans-serif; }"
+      }
+    ]
+  },
+  "properties": {
+    "title": {
+      "title": "Document Title",
+      "type": "string",
+      "meta": {
+        "componentName": "non-empty-string",
+        "transform": false
+      },
+      "pattern": "^(?!\\s*$).+"
+    },
+    "styles": {
+      "title": "Styles",
+      "type": "array",
+      "items": {
+        "title": "Style",
+        "meta": {
+          "componentName": "style",
+          "transform": true
+        },
+        "oneOf": [
+          {
+            "title": "Resource as Text",
+            "type": "object",
+            "meta": {
+              "componentName": "source-text",
+              "transform": false
+            },
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "title": "Text Content",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "title": "Resource as URI",
+            "type": "object",
+            "meta": {
+              "componentName": "source-uri",
+              "transform": false
+            },
+            "required": [
+              "uri"
+            ],
+            "properties": {
+              "uri": {
+                "title": "URI",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "scripts": {
+      "title": "Scripts",
+      "type": "array",
+      "items": {
+        "title": "Script",
+        "meta": {
+          "componentName": "script",
+          "transform": true
+        },
+        "properties": {
+          "isHeadScript": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "_children": {
+      "title": "Component Children",
+      "type": "object",
+      "properties": {
+        "0": {
+          "id": "header",
+          "title": "Page Header",
+          "type": "object",
+          "required": [
+            "links",
+            "secondary-links"
+          ],
+          "meta": {
+            "componentName": "header",
+            "transform": false
+          },
+          "default": {
+            "links": [
+              {
+                "title": "Home",
+                "uri": "/"
+              },
+              {
+                "title": "About",
+                "uri": "/about"
+              }
+            ]
+          },
+          "properties": {
+            "links": {
+              "title": "Primary Navigation Links",
+              "type": "array",
+              "items": {
+                "title": "Link",
+                "type": "object",
+                "meta": {
+                  "componentName": "link",
+                  "transform": true
+                },
+                "required": [
+                  "title",
+                  "uri"
+                ],
+                "properties": {
+                  "title": {
+                    "title": "Link Text",
+                    "type": "string",
+                    "meta": {
+                      "componentName": "non-empty-string",
+                      "transform": false
+                    },
+                    "pattern": "^(?!\\s*$).+"
+                  },
+                  "uri": {
+                    "title": "URI",
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "secondary-links": {
+              "title": "Secondary Navigation Links",
+              "type": "array",
+              "items": {
+                "title": "Link",
+                "type": "object",
+                "meta": {
+                  "componentName": "link",
+                  "transform": true
+                },
+                "required": [
+                  "title",
+                  "uri"
+                ],
+                "properties": {
+                  "title": {
+                    "title": "Link Text",
+                    "type": "string",
+                    "meta": {
+                      "componentName": "non-empty-string",
+                      "transform": false
+                    },
+                    "pattern": "^(?!\\s*$).+"
+                  },
+                  "uri": {
+                    "title": "URI",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "1": {
+          "type": "object",
+          "meta": {
+            "componentName": "main",
+            "transform": false
+          },
+          "title": "main",
+          "default": {},
+          "properties": {
+            "_children": {
+              "title": "Component Children",
+              "type": "object",
+              "properties": {
+                "0": {
+                  "type": "object",
+                  "meta": {
+                    "componentName": "home",
+                    "transform": false
+                  },
+                  "title": "home",
+                  "default": {}
+                },
+                "1": {
+                  "type": "object",
+                  "meta": {
+                    "componentName": "nutrition-comparison",
+                    "transform": false
+                  },
+                  "title": "nutrition-comparison",
+                  "default": {}
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "type": "object",
+          "meta": {
+            "componentName": "footer",
+            "transform": false
+          },
+          "title": "footer",
+          "default": {}
+        }
+      }
+    }
+  }
+}
