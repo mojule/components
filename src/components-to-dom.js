@@ -1,118 +1,102 @@
 'use strict'
 
-const TransformMapper = require( './component-transform-mapper' )
 const is = require( '@mojule/is' )
 const Templating = require( '@mojule/templating' )
+const Tree = require( '@mojule/tree' )
 const Vdom = require( '@mojule/vdom' )
 const sass = require( 'node-sass' )
 
-const ComponentsToDom = components => {
-  const transformMapper = TransformMapper( components )
+const ComponentsToDom = api => {
+  const components = api.get()
   const componentNames = Object.keys( components )
 
-  const getContent = name => {
-    if( components[ name ] )
-      return components[ name ].content
-  }
-
-  const getTemplate = name => {
-    if( components[ name ] )
-      return components[ name ].template
-  }
-
-  const getConfig = name => {
-    if( components[ name ] )
-      return components[ name ].config
-  }
-
-  const getStyle = name => {
-    if( components[ name ] )
-      return components[ name ].style
-  }
+  const { getContent, getTemplate, getConfig, getStyle } = api
 
   const templates = componentNames.reduce( ( t, name ) => {
     const template = getTemplate( name )
 
     if( template )
-      t[ name ] = Vdom( template )
+      t[ name ] = template
 
     return t
   }, {} )
 
-  const templating = Templating( templates )
+  const componentsToDom = modelNode => {
+    if( Tree.isNode( modelNode ) )
+      modelNode = Tree( modelNode )
 
-  const componentsToDom = root => {
     let css = ''
     const cssMap = {}
 
-    root.walk( current => {
-      const name = current.getValue( 'name' )
+    const addCss = name => {
+      if( cssMap[ name ] ) return
 
-      if( !cssMap[ name ] ){
-        const style = getStyle( name )
+      const style = getStyle( name )
 
-        if( style )
-          css += '\n' + style
+      if( style )
+        css += '\n' + style
 
-        cssMap[ name ] = true
-      }
-    })
-
-    const document = root.find( current => {
-      const { name } = current.getValue()
-
-      return name === 'document'
-    })
-
-    if( document ){
-      const model = document.getValue( 'model' )
-      let { styles } = model
-
-      if( !is.array( styles ) )
-        styles = []
-
-      css = sass.renderSync({ data: css }).css.toString()
-
-      styles.push({
-        text: css
-      })
-
-      model.styles = styles
-
-      document.setValue( 'model', model )
+      cssMap[ name ] = true
     }
+
+    const templating = Templating( templates, { onInclude: addCss } )
 
     const nodeToDom = node => {
       let { name, model } = node.getValue()
+
+      addCss( name )
 
       const content = getContent( name )
 
       if( content )
         return Vdom( content )
 
-      model = transformMapper( name, model )
-
-      const dom = templating( name, model )
       const config = getConfig( name )
 
-      if( config && config.containerSelector ){
-        const { containerSelector } = config
+      let containerSelector = '[data-container]'
 
-        const target = dom.matches( containerSelector ) ?
-          dom :
-          dom.querySelector( containerSelector )
+      if( config && config.containerSelector )
+        containerSelector = config.containerSelector
 
-        if( target )
-          node.getChildren().forEach( child => {
-            const domChild = nodeToDom( child )
-            target.append( domChild )
-          })
+      const fragment = Vdom.createDocumentFragment()
+
+      if( node.hasChildren() )
+        node.getChildren().forEach( child => {
+          const domChild = nodeToDom( child )
+          fragment.append( domChild )
+        })
+
+      if( name === 'document' ){
+        const model = node.getValue( 'model' )
+        let { styles } = model
+
+        if( !is.array( styles ) )
+          styles = []
+
+        css = sass.renderSync({ data: css }).css.toString()
+
+        styles.push({
+          text: css
+        })
+
+        model.styles = styles
+
+        node.setValue( 'model', model )
       }
+
+      const dom = templating( name, model )
+
+      const target = dom.matches( containerSelector ) ?
+        dom :
+        dom.querySelector( containerSelector )
+
+      if( target )
+        target.append( fragment )
 
       return dom
     }
 
-    return nodeToDom( root )
+    return nodeToDom( modelNode )
   }
 
   return componentsToDom

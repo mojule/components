@@ -20,18 +20,14 @@ const { table, tr, th, td, text } = Vdom.h
 const strToDom = str => Vdom.parse( str, { removeWhitespace: true } )
 
 const renderCell = value => {
-  if( is.string( value ) ){
-    const fragment = Vdom.createDocumentFragment()
+  const fragment = Vdom.createDocumentFragment()
 
-    const el = strToDom( mdWriter.render( mdReader.parse( value ) ) )
+  const el = strToDom( mdWriter.render( mdReader.parse( value ) ) )
 
-    fragment.append( el )
-    el.unwrap()
+  fragment.append( el )
+  el.unwrap()
 
-    return fragment
-  }
-
-  return text( value )
+  return fragment
 }
 
 const rowsToTable = grid => {

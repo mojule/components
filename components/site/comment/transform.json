@@ -1,8 +1,0 @@
-{
-  "comment-wrapper": {
-    "$if": [
-      { "$value": "commentValue" },
-      { "attr": [ "data-comment-value", { "$value": "commentValue" } ] }
-    ]
-  }
-}

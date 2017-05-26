@@ -1,10 +1,12 @@
 # components
 
-prototype/experiment code
+A component system for mojule
+
+Documents todo
 
 ## Install
 
-`npm install @mojule/xxx`
+`npm install @mojule/components`
 
 ## Example
 

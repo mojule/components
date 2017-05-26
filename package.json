@@ -1,7 +1,7 @@
 {
   "name": "@mojule/components",
-  "version": "0.0.1",
-  "description": "components",
+  "version": "0.0.2",
+  "description": "Component system for mojule",
   "main": "index.js",
   "scripts": {
     "build": "gulp",
@@ -31,7 +31,7 @@
     "@mojule/json-tree": "^0.5.5",
     "@mojule/mmon": "^0.1.1",
     "@mojule/schema-tree": "^0.4.6",
-    "@mojule/templating": "^0.2.9",
+    "@mojule/templating": "^0.3.3",
     "@mojule/transform": "^0.2.8",
     "@mojule/tree": "^0.6.6",
     "@mojule/utils": "^0.1.13",
