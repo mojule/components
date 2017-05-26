@@ -32,18 +32,14 @@ var strToDom = function strToDom(str) {
 };
 
 var renderCell = function renderCell(value) {
-  if (is.string(value)) {
-    var fragment = Vdom.createDocumentFragment();
+  var fragment = Vdom.createDocumentFragment();
 
-    var el = strToDom(mdWriter.render(mdReader.parse(value)));
+  var el = strToDom(mdWriter.render(mdReader.parse(value)));
 
-    fragment.append(el);
-    el.unwrap();
+  fragment.append(el);
+  el.unwrap();
 
-    return fragment;
-  }
-
-  return text(value);
+  return fragment;
 };
 
 var rowsToTable = function rowsToTable(grid) {

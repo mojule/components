@@ -65,8 +65,6 @@ var transformComponents = function transformComponents(vfs) {
 
     if (transforms[ext]) data = transforms[ext](data);
 
-    if (!is.undefined(result[name][type])) throw new Error('Duplicate found for ' + name + ', ' + type);
-
     result[name][type] = data;
   });
 

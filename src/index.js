@@ -33,7 +33,6 @@ const Components = components => {
 
   const componentsToDom = ComponentsToDom( api )
 
-
   return api
 }
 

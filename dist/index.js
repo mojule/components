@@ -6,6 +6,7 @@ var capitalizeFirstLetter = utils.capitalizeFirstLetter;
 
 
 var getComponents = require('./get-components');
+var ComponentsToDom = require('./components-to-dom');
 
 var componentDataNames = ['config', 'model', 'schema', 'style', 'template', 'client', 'content'];
 
@@ -13,6 +14,9 @@ var Components = function Components(components) {
   var api = {
     get: function get() {
       return components;
+    },
+    dom: function dom(modelTree) {
+      return componentsToDom(modelTree);
     }
   };
 
@@ -27,6 +31,8 @@ var Components = function Components(components) {
   }, {});
 
   Object.assign(api, getData);
+
+  var componentsToDom = ComponentsToDom(api);
 
   return api;
 };
