@@ -2,6 +2,7 @@
 
 const path = require( 'path' )
 const is = require( '@mojule/is' )
+const Grid = require( '@mojule/grid' )
 const Vdom = require( '@mojule/vdom' )
 const markdown = require( 'commonmark' )
 const pify = require( 'pify' )
@@ -17,10 +18,15 @@ const transforms = {
   '.html': strToDom,
   '.md': str => strToDom( mdWriter.render( mdReader.parse( str ) ) ),
   '.markdown': str => transforms[ '.md' ]( str ),
-  '.csv': str => {
+  'content.csv': str => {
     const grid = TableGrid( str )
 
     return grid.dom().get()
+  },
+  '.csv': str => {
+    const grid = Grid( str )
+
+    return grid.models()
   }
 }
 
@@ -45,8 +51,7 @@ const transformComponents = vfs => {
     const directory = file.getParent()
     const name = directory.filename()
     const parsed = path.parse( file.filename() )
-    const type = parsed.name
-    const ext = parsed.ext
+    const { ext, base, name: type } = parsed
     const categories = getCategories( directory )
 
     let data = file.data()
@@ -54,8 +59,11 @@ const transformComponents = vfs => {
     if( !result[ name ] )
       result[ name ] = { name, categories }
 
-    if( transforms[ ext ] )
+    if( transforms[ base ] ){
+      data = transforms[ base ]( data )
+    } else if( transforms[ ext ] ){
       data = transforms[ ext ]( data )
+    }
 
     result[ name ][ type ] = data
   })

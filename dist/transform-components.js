@@ -2,6 +2,7 @@
 
 var path = require('path');
 var is = require('@mojule/is');
+var Grid = require('@mojule/grid');
 var Vdom = require('@mojule/vdom');
 var markdown = require('commonmark');
 var pify = require('pify');
@@ -25,10 +26,15 @@ var transforms = {
   '.markdown': function markdown(str) {
     return transforms['.md'](str);
   },
-  '.csv': function csv(str) {
+  'content.csv': function contentCsv(str) {
     var grid = TableGrid(str);
 
     return grid.dom().get();
+  },
+  '.csv': function csv(str) {
+    var grid = Grid(str);
+
+    return grid.models();
   }
 };
 
@@ -55,15 +61,21 @@ var transformComponents = function transformComponents(vfs) {
     var directory = file.getParent();
     var name = directory.filename();
     var parsed = path.parse(file.filename());
-    var type = parsed.name;
-    var ext = parsed.ext;
+    var ext = parsed.ext,
+        base = parsed.base,
+        type = parsed.name;
+
     var categories = getCategories(directory);
 
     var data = file.data();
 
     if (!result[name]) result[name] = { name: name, categories: categories };
 
-    if (transforms[ext]) data = transforms[ext](data);
+    if (transforms[base]) {
+      data = transforms[base](data);
+    } else if (transforms[ext]) {
+      data = transforms[ext](data);
+    }
 
     result[name][type] = data;
   });
