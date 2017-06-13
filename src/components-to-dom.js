@@ -10,7 +10,7 @@ const ComponentsToDom = api => {
   const components = api.get()
   const componentNames = Object.keys( components )
 
-  const { getContent, getTemplate, getConfig, getStyle } = api
+  const { getContent, getTemplate, getConfig, getStyle, getModel } = api
 
   const templates = componentNames.reduce( ( t, name ) => {
     const template = getTemplate( name )
@@ -43,6 +43,9 @@ const ComponentsToDom = api => {
 
     const nodeToDom = node => {
       let { name, model } = node.getValue()
+      const defaultModel = getModel( name ) || {}
+
+      model = Object.assign( defaultModel, model )
 
       addCss( name )
 

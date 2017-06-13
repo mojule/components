@@ -13,7 +13,8 @@ var ComponentsToDom = function ComponentsToDom(api) {
   var getContent = api.getContent,
       getTemplate = api.getTemplate,
       getConfig = api.getConfig,
-      getStyle = api.getStyle;
+      getStyle = api.getStyle,
+      getModel = api.getModel;
 
 
   var templates = componentNames.reduce(function (t, name) {
@@ -46,6 +47,10 @@ var ComponentsToDom = function ComponentsToDom(api) {
       var _node$getValue = node.getValue(),
           name = _node$getValue.name,
           model = _node$getValue.model;
+
+      var defaultModel = getModel(name) || {};
+
+      model = Object.assign(defaultModel, model);
 
       addCss(name);
 
