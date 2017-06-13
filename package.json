@@ -1,6 +1,6 @@
 {
   "name": "@mojule/components",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Component system for mojule",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "@mojule/json-tree": "^0.5.6",
     "@mojule/mmon": "^0.1.2",
     "@mojule/schema-tree": "^0.4.7",
-    "@mojule/templating": "^0.3.5",
+    "@mojule/templating": "^0.3.6",
     "@mojule/transform": "^0.2.9",
     "@mojule/tree": "^0.6.7",
     "@mojule/utils": "^0.1.13",
