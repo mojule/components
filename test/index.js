@@ -24,7 +24,7 @@ describe( 'Components', () => {
       done()
     })
   })
-
+/*
   it( 'gets dom', () => {
     const mmon = `
 document>
@@ -42,7 +42,7 @@ document>
 
     assert( is.string( html ) && html.length > 0 )
   })
-
+*/
   it( 'getData miss', () => {
     assert.equal( componentApi.getTemplate( 'nope' ), undefined )
   })
@@ -57,19 +57,13 @@ document>
   it( 'from model tree', () => {
     const mmon = `
 document>
-  title: Home
-  header>
-    links[]
-      {}
-        title: Home
-        uri: /home
-      {}
-        title: About
-        uri: /about
+  styles[]
+    {}
+      text: body{}
+    {}
+      uri: /css
   main>
-    home>
     nutrition-comparison>
-  footer>
     `
 
     const modelTree = Tree( Mmon.parse( mmon ) )

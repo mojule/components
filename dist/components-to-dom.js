@@ -50,7 +50,7 @@ var ComponentsToDom = function ComponentsToDom(api) {
 
       var defaultModel = getModel(name) || {};
 
-      model = Object.assign(defaultModel, model);
+      model = Object.assign({}, defaultModel, model);
 
       addCss(name);
 
@@ -72,8 +72,8 @@ var ComponentsToDom = function ComponentsToDom(api) {
       });
 
       if (name === 'document') {
-        var _model = node.getValue('model');
-        var styles = _model.styles;
+        var _model = model,
+            styles = _model.styles;
 
 
         if (!is.array(styles)) styles = [];
@@ -84,9 +84,7 @@ var ComponentsToDom = function ComponentsToDom(api) {
           text: css
         });
 
-        _model.styles = styles;
-
-        node.setValue('model', _model);
+        model.styles = styles;
       }
 
       var dom = templating(name, model);

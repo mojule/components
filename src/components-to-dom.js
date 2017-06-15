@@ -45,7 +45,7 @@ const ComponentsToDom = api => {
       let { name, model } = node.getValue()
       const defaultModel = getModel( name ) || {}
 
-      model = Object.assign( defaultModel, model )
+      model = Object.assign( {}, defaultModel, model )
 
       addCss( name )
 
@@ -70,7 +70,6 @@ const ComponentsToDom = api => {
         })
 
       if( name === 'document' ){
-        const model = node.getValue( 'model' )
         let { styles } = model
 
         if( !is.array( styles ) )
@@ -83,8 +82,6 @@ const ComponentsToDom = api => {
         })
 
         model.styles = styles
-
-        node.setValue( 'model', model )
       }
 
       const dom = templating( name, model )
