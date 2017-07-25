@@ -14,6 +14,7 @@ var ComponentsToDom = function ComponentsToDom(api) {
       getTemplate = api.getTemplate,
       getConfig = api.getConfig,
       getStyle = api.getStyle,
+      getClient = api.getClient,
       getModel = api.getModel;
 
 
@@ -30,6 +31,8 @@ var ComponentsToDom = function ComponentsToDom(api) {
 
     var css = '';
     var cssMap = {};
+    var js = '';
+    var jsMap = {};
 
     var addCss = function addCss(name) {
       if (cssMap[name]) return;
@@ -41,7 +44,22 @@ var ComponentsToDom = function ComponentsToDom(api) {
       cssMap[name] = true;
     };
 
-    var templating = Templating(templates, { onInclude: addCss });
+    var addJs = function addJs(name) {
+      if (jsMap[name]) return;
+
+      var script = getClient(name);
+
+      if (script) js += '\n' + script;
+
+      jsMap[name] = true;
+    };
+
+    var onInclude = function onInclude(name) {
+      addCss(name);
+      addJs(name);
+    };
+
+    var templating = Templating(templates, { onInclude: onInclude });
 
     var nodeToDom = function nodeToDom(node) {
       var _node$getValue = node.getValue(),
@@ -53,6 +71,7 @@ var ComponentsToDom = function ComponentsToDom(api) {
       model = Object.assign({}, defaultModel, model);
 
       addCss(name);
+      addJs(name);
 
       var content = getContent(name);
 
@@ -73,10 +92,13 @@ var ComponentsToDom = function ComponentsToDom(api) {
 
       if (name === 'document') {
         var _model = model,
-            styles = _model.styles;
+            styles = _model.styles,
+            scripts = _model.scripts;
 
 
         if (!is.array(styles)) styles = [];
+
+        if (!is.array(scripts)) scripts = [];
 
         css = sass.renderSync({ data: css }).css.toString();
 
@@ -84,7 +106,12 @@ var ComponentsToDom = function ComponentsToDom(api) {
           text: css
         });
 
+        scripts.push({
+          text: js
+        });
+
         model.styles = styles;
+        model.scripts = scripts;
       }
 
       var dom = templating(name, model);

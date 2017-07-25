@@ -10,7 +10,9 @@ const ComponentsToDom = api => {
   const components = api.get()
   const componentNames = Object.keys( components )
 
-  const { getContent, getTemplate, getConfig, getStyle, getModel } = api
+  const {
+    getContent, getTemplate, getConfig, getStyle, getClient, getModel
+  } = api
 
   const templates = componentNames.reduce( ( t, name ) => {
     const template = getTemplate( name )
@@ -27,6 +29,8 @@ const ComponentsToDom = api => {
 
     let css = ''
     const cssMap = {}
+    let js = ''
+    const jsMap = {}
 
     const addCss = name => {
       if( cssMap[ name ] ) return
@@ -39,7 +43,23 @@ const ComponentsToDom = api => {
       cssMap[ name ] = true
     }
 
-    const templating = Templating( templates, { onInclude: addCss } )
+    const addJs = name => {
+      if( jsMap[ name ] ) return
+
+      const script = getClient( name )
+
+      if( script )
+        js += '\n' + script
+
+      jsMap[ name ] = true
+    }
+
+    const onInclude = name => {
+      addCss( name )
+      addJs( name )
+    }
+
+    const templating = Templating( templates, { onInclude } )
 
     const nodeToDom = node => {
       let { name, model } = node.getValue()
@@ -48,6 +68,7 @@ const ComponentsToDom = api => {
       model = Object.assign( {}, defaultModel, model )
 
       addCss( name )
+      addJs( name )
 
       const content = getContent( name )
 
@@ -70,10 +91,13 @@ const ComponentsToDom = api => {
         })
 
       if( name === 'document' ){
-        let { styles } = model
+        let { styles, scripts } = model
 
         if( !is.array( styles ) )
           styles = []
+
+        if( !is.array( scripts ) )
+          scripts = []
 
         css = sass.renderSync({ data: css }).css.toString()
 
@@ -81,7 +105,12 @@ const ComponentsToDom = api => {
           text: css
         })
 
+        scripts.push({
+          text: js
+        })
+
         model.styles = styles
+        model.scripts = scripts
       }
 
       const dom = templating( name, model )
