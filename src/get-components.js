@@ -1,10 +1,10 @@
 'use strict'
 
-const Vfs = require( '@mojule/vfs' )
+const VFS = require( '@mojule/vfs' )
 const pify = require( 'pify' )
 const transformComponents = require( './transform-components' )
 
-const virtualize = pify( Vfs.virtualize )
+const virtualize = pify( VFS.virtualize )
 
 const getComponents = ( filepath, callback ) =>
   virtualize( filepath )

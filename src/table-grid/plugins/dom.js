@@ -1,30 +1,28 @@
 'use strict'
 
-const Vdom = require( '@mojule/vdom' )
+const VDOM = require( '@mojule/vdom' )
 const markdown = require( 'commonmark' )
 const is = require( '@mojule/is' )
 const formatNumbers = require( './format-numbers' )
 const formatString = require( './format-string' )
 
-const dom = grid => {
-  return {
-    dom: () => rowsToTable( grid )
-  }
+const dom = ({ api }) => {
+  api.dom = () => rowsToTable( api )
 }
 
 const mdReader = new markdown.Parser()
 const mdWriter = new markdown.HtmlRenderer()
 
-const { table, tr, th, td, text } = Vdom.h
+const { table, tr, th, td, text } = VDOM.h
 
-const strToDom = str => Vdom.parse( str, { removeWhitespace: true } )
+const strToDom = str => VDOM.parse( str, { removeWhitespace: true } )
 
 const renderCell = value => {
-  const fragment = Vdom.createDocumentFragment()
+  const fragment = VDOM.createDocumentFragment()
 
   const el = strToDom( mdWriter.render( mdReader.parse( value ) ) )
 
-  fragment.append( el )
+  fragment.appendChild( el )
   el.unwrap()
 
   return fragment
@@ -48,7 +46,7 @@ const rowsToTable = grid => {
     const $th = th( renderCell( name ) )
 
     if( type === 'number' )
-      $th.addClass( 'table__cell--number' )
+      $th.classList.add( 'table__cell--number' )
 
     return $th
   }))
@@ -59,10 +57,10 @@ const rowsToTable = grid => {
       const value = row[ i ]
       const $td = td( renderCell( value ) )
 
-      $td.setAttr( 'title', name )
+      $td.setAttribute( 'title', name )
 
       if( type === 'number' || type === 'integer' )
-        $td.addClass( 'table__cell--number' )
+        $td.classList.add( 'table__cell--number' )
 
       return $td
     })

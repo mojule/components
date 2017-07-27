@@ -1,17 +1,15 @@
 'use strict'
 
-const mutateColumn = grid => {
-  return {
-    mutateColumn: ( x = 0, mapper = col => col ) => {
-      x = grid.normalizeColumnIndex( x )
+const mutateColumn = ({ api }) => {
+  api.mutateColumn = ( x = 0, mapper = col => col ) => {
+    x = api.normalizeColumnIndex( x )
 
-      return grid.setColumn(
-        mapper(
-          grid.getColumn( x ), grid
-        ),
-        x
-      )
-    }
+    return api.setColumn(
+      mapper(
+        api.getColumn( x ), api
+      ),
+      x
+    )
   }
 }
 

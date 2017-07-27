@@ -66,9 +66,10 @@ document>
     nutrition-comparison>
     `
 
-    const modelTree = Tree( Mmon.parse( mmon ) )
+    const parsed = Mmon.parse( mmon )
+    const modelTree = Tree.deserialize( parsed )
     const dom = componentApi.dom( modelTree )
-    const html = dom.stringify()
+    const html = dom.toString()
 
     assert( is.string( html ) && html.length > 0 )
   })

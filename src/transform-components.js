@@ -3,7 +3,7 @@
 const path = require( 'path' )
 const is = require( '@mojule/is' )
 const Grid = require( '@mojule/grid' )
-const Vdom = require( '@mojule/vdom' )
+const VDOM = require( '@mojule/vdom' )
 const markdown = require( 'commonmark' )
 const pify = require( 'pify' )
 const TableGrid = require( './table-grid' )
@@ -11,7 +11,7 @@ const TableGrid = require( './table-grid' )
 const mdReader = new markdown.Parser()
 const mdWriter = new markdown.HtmlRenderer()
 
-const strToDom = str => Vdom.parse( str, { removeWhitespace: true } ).get()
+const strToDom = str => VDOM.parse( str, { removeWhitespace: true } ).serialize()
 
 const transforms = {
   '.json': str => JSON.parse( str ),
@@ -21,7 +21,7 @@ const transforms = {
   'content.csv': str => {
     const grid = TableGrid( str )
 
-    return grid.dom().get()
+    return grid.dom().serialize()
   },
   '.csv': str => {
     const grid = Grid( str )
@@ -33,7 +33,7 @@ const transforms = {
 const transformComponents = vfs => {
   const result = {}
 
-  const files = vfs.findAll( current => current.nodeType() === 'file' )
+  const files = vfs.subNodes.filter( current => current.nodeName === '#file' )
   const rootPath = vfs.getPath()
 
   const getCategories = directory => {
@@ -48,13 +48,13 @@ const transformComponents = vfs => {
   }
 
   files.forEach( file => {
-    const directory = file.getParent()
-    const name = directory.filename()
-    const parsed = path.parse( file.filename() )
+    const directory = file.parentNode
+    const name = directory.filename
+    const parsed = path.parse( file.filename )
     const { ext, base, name: type } = parsed
     const categories = getCategories( directory )
 
-    let data = file.data()
+    let data = file.data
 
     if( !result[ name ] )
       result[ name ] = { name, categories }

@@ -3,7 +3,7 @@
 const is = require( '@mojule/is' )
 const Templating = require( '@mojule/templating' )
 const Tree = require( '@mojule/tree' )
-const Vdom = require( '@mojule/vdom' )
+const VDOM = require( '@mojule/vdom' )
 const sass = require( 'node-sass' )
 
 const ComponentsToDom = api => {
@@ -22,8 +22,8 @@ const ComponentsToDom = api => {
   }, {} )
 
   const componentsToDom = modelNode => {
-    if( Tree.isNode( modelNode ) )
-      modelNode = Tree( modelNode )
+    if( !is.function( modelNode.serialize ) )
+      modelNode = Tree.deserialize( modelNode )
 
     let css = ''
     const cssMap = {}
@@ -42,7 +42,7 @@ const ComponentsToDom = api => {
     const templating = Templating( templates, { onInclude: addCss } )
 
     const nodeToDom = node => {
-      let { name, model } = node.getValue()
+      let { name, model } = node.value
       const defaultModel = getModel( name ) || {}
 
       model = Object.assign( {}, defaultModel, model )
@@ -52,7 +52,7 @@ const ComponentsToDom = api => {
       const content = getContent( name )
 
       if( content )
-        return Vdom( content )
+        return VDOM.deserialize( content )
 
       const config = getConfig( name )
 
@@ -61,12 +61,13 @@ const ComponentsToDom = api => {
       if( config && config.containerSelector )
         containerSelector = config.containerSelector
 
-      const fragment = Vdom.createDocumentFragment()
+      const fragment = VDOM.createDocumentFragment()
 
-      if( node.hasChildren() )
-        node.getChildren().forEach( child => {
+      if( node.hasChildNodes() )
+        node.childNodes.forEach( child => {
           const domChild = nodeToDom( child )
-          fragment.append( domChild )
+
+          fragment.appendChild( domChild )
         })
 
       if( name === 'document' ){
@@ -85,13 +86,10 @@ const ComponentsToDom = api => {
       }
 
       const dom = templating( name, model )
-
-      const target = dom.matches( containerSelector ) ?
-        dom :
-        dom.querySelector( containerSelector )
+      const target = dom.select( containerSelector )
 
       if( target )
-        target.append( fragment )
+        target.appendChild( fragment )
 
       return dom
     }
