@@ -55,9 +55,14 @@ const ComponentsToDom = api => {
       clientMap[ name ] = true
     }
 
-    const onInclude = name => {
+    const onInclude = ( name, el ) => {
       addCss( name )
       addClient( name )
+
+      const content = getContent( name )
+
+      if( content )
+        el.appendChild( VDOM.deserialize( content ) )
     }
 
     const templating = Templating( templates, { onInclude } )
