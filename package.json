@@ -20,17 +20,18 @@
   "homepage": "https://github.com/mojule/components#readme",
   "devDependencies": {
     "istanbul": "^0.4.5",
+    "jsdom": "^11.1.0",
     "mocha": "^3.4.2"
   },
   "dependencies": {
+    "@mojule/dom-utils": "^0.1.2",
     "@mojule/grid": "github:mojule/grid#1.0.0",
     "@mojule/json-tree": "github:mojule/json-tree#1.0.0",
     "@mojule/mmon": "github:mojule/mmon#1.0.0",
     "@mojule/schema-tree": "github:mojule/schema-tree#1.0.0",
-    "@mojule/templating": "github:mojule/templating#1.0.0",
+    "@mojule/templating": "github:mojule/templating#jsdom",
     "@mojule/tree": "github:mojule/tree#1.0.0",
     "@mojule/utils": "^0.1.13",
-    "@mojule/vdom": "github:mojule/vdom#1.0.0",
     "@mojule/vfs": "github:mojule/vfs#1.0.0",
     "commonmark": "^0.27.0",
     "node-sass": "^4.5.3"
