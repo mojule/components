@@ -74,6 +74,8 @@ const Render = ( components, document ) => {
         dom.appendChild( fragment )
       }
 
+      onInclude( name, dom )
+
       return dom
     }
 
