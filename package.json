@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@mojule/dom-utils": "^0.1.2",
+    "@mojule/flatten": "^0.1.3",
     "@mojule/grid": "github:mojule/grid#1.0.0",
     "@mojule/json-tree": "github:mojule/json-tree#1.0.0",
     "@mojule/mmon": "github:mojule/mmon#1.0.0",
