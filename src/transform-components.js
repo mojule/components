@@ -1,74 +1,66 @@
 'use strict'
 
-const path = require( 'path' )
-const is = require( '@mojule/is' )
-const Grid = require( '@mojule/grid' )
-const Vdom = require( '@mojule/vdom' )
-const markdown = require( 'commonmark' )
-const pify = require( 'pify' )
-const TableGrid = require( './table-grid' )
+let path = require( 'path' )
+const Transformers = require( './transformers' )
 
-const mdReader = new markdown.Parser()
-const mdWriter = new markdown.HtmlRenderer()
+// browserify just exports path, but it's equivalent
+path = path.posix || path
 
-const strToDom = str => Vdom.parse( str, { removeWhitespace: true } ).get()
-
-const transforms = {
-  '.json': str => JSON.parse( str ),
-  '.html': strToDom,
-  '.md': str => strToDom( mdWriter.render( mdReader.parse( str ) ) ),
-  '.markdown': str => transforms[ '.md' ]( str ),
-  'content.csv': str => {
-    const grid = TableGrid( str )
-
-    return grid.dom().get()
-  },
-  '.csv': str => {
-    const grid = Grid( str )
-
-    return grid.models()
-  }
+const defaultOptions = {
+  Transformers
 }
 
-const transformComponents = vfs => {
-  const result = {}
+const TransformComponents = options => {
+  options = Object.assign( {}, defaultOptions, options )
 
-  const files = vfs.findAll( current => current.nodeType() === 'file' )
-  const rootPath = vfs.getPath()
+  const { Transformers } = options
+  const transforms = Transformers( options )
 
-  const getCategories = directory => {
-    const directoryPath = directory.getPath()
-    const relative = path.posix.relative( rootPath, directoryPath )
-    const segs = relative.split( path.posix.sep )
+  const transformComponents = vfs => {
+    const result = {}
 
-    // discard last segment, it's the component name
-    segs.pop()
+    const files = vfs.subNodes.filter( current => current.nodeName === '#file' )
+    const rootPath = vfs.getPath()
 
-    return segs
-  }
+    const getCategories = directory => {
+      const directoryPath = directory.getPath()
+      const relative = path.relative( rootPath, directoryPath )
+      const segs = relative.split( path.sep )
 
-  files.forEach( file => {
-    const directory = file.getParent()
-    const name = directory.filename()
-    const parsed = path.parse( file.filename() )
-    const { ext, base, name: type } = parsed
-    const categories = getCategories( directory )
+      // discard last segment, it's the component name
+      segs.pop()
 
-    let data = file.data()
-
-    if( !result[ name ] )
-      result[ name ] = { name, categories }
-
-    if( transforms[ base ] ){
-      data = transforms[ base ]( data )
-    } else if( transforms[ ext ] ){
-      data = transforms[ ext ]( data )
+      return segs
     }
 
-    result[ name ][ type ] = data
-  })
+    files.forEach( file => {
+      const directory = file.parentNode
+      let name = directory.filename
+      const parsed = path.parse( file.filename )
+      let { ext, base, name: type } = parsed
+      const categories = getCategories( directory )
 
-  return result
+      let data = file.data
+
+      name = name === 'document.html' ? 'template.html' : name
+      type = type === 'document' ? 'template' : type
+
+      if( !result[ name ] )
+        result[ name ] = { name, categories }
+
+      if( transforms[ base ] ){
+        data = transforms[ base ]( data )
+      } else if( transforms[ ext ] ){
+        data = transforms[ ext ]( data )
+      }
+
+      result[ name ][ type ] = data
+    })
+
+    return result
+  }
+
+  return transformComponents
 }
 
-module.exports = transformComponents
+module.exports = TransformComponents
