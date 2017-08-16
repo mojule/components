@@ -1,6 +1,7 @@
 'use strict'
 
 const ReadComponents = require( './read-components' )
+const TransformComponents = require( './transform-components' )
 const Render = require( './render' )
 const getValues = require( './get-values' )
 
@@ -11,6 +12,6 @@ const Components = ( components, document ) => {
   return api
 }
 
-Object.assign( Components, { ReadComponents } )
+Object.assign( Components, { ReadComponents, TransformComponents } )
 
 module.exports = Components

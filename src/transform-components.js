@@ -42,9 +42,6 @@ const TransformComponents = options => {
 
       let data = file.data
 
-      name = name === 'document.html' ? 'template.html' : name
-      type = type === 'document' ? 'template' : type
-
       if( !result[ name ] )
         result[ name ] = { name, categories }
 
