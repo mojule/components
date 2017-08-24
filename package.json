@@ -1,6 +1,6 @@
 {
   "name": "@mojule/components",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Component system for mojule",
   "main": "index.js",
   "scripts": {

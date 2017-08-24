@@ -84,13 +84,14 @@ const formatNumberRows = grid => {
 const Csv = () => {
   const csv = str => {
     const grid = Grid( str )
-
+    const models = grid.models().map( model => expand( model ) )
     const values = grid.getValues()
 
+    /*
+      only transform markdown and format numbers for the table, the models
+      should be left as is, hence why we get them first
+    */
     grid.setValues( markdownStrings( values ) )
-
-    const models = grid.models().map( model => expand( model ) )
-
     formatNumberRows( grid )
 
     const table = gridToTableModel( grid )
