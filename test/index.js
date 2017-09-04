@@ -27,7 +27,6 @@ describe( 'Components', () => {
       if( err ) done( err )
 
       assert( is.object( components ) )
-      assert( is.object( components ) )
       assert( Object.keys( components ).length > 0 )
 
       componentApi = Components( components, document )

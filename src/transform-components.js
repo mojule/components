@@ -17,6 +17,18 @@ const TransformComponents = options => {
   const transforms = Transformers( options )
 
   const transformComponents = vfs => {
+    options.getStyle = name => {
+      const file = vfs.subNodes.find( current =>{
+        if( current.nodeName === '#directory' ) return false
+
+        const directory = file.parentNode
+        const parsed = path.parse( current.filename )
+
+        if( parsed.name === 'style' && directory.filename === name )
+          return file.data
+      })
+    }
+
     const result = {}
 
     const files = vfs.subNodes.filter( current => current.nodeName === '#file' )
