@@ -40,9 +40,14 @@ describe( 'Components', () => {
 document>
   title: Home
   header>
+    links[]
+      {}
+        title: Home
+        uri: /
+      {}
+        title: "Contact Us"
+        uri: /contact-us
   main>
-    home>
-    nutrition-comparison>
   footer>
     `
 
@@ -73,7 +78,6 @@ document>
     {}
       uri: /css
   main>
-    nutrition-comparison>
     `
 
     const parsed = Mmon.parse( mmon )

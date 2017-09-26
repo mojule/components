@@ -2,12 +2,15 @@
   <component-head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title string="title"></title>
-    <each name="styles" include="style" />
-    <each name="scripts" include="script" if="isHeadScript" />
+    <title text="title"></title>
+    <each array="styles">
+      <include name="style"></include>
+    </each>
   </component-head>
   <component-body>
     <div data-container></div>
-    <each name="scripts" include="script" not="isHeadScript" />
+    <each array="scripts">
+      <include name="script"></include>
+    </each>
   </component-body>
 </component-html>
