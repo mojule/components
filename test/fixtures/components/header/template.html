@@ -1,0 +1,17 @@
+<header>
+  <h1>Acme Ltd</h1>
+  <if array="links">
+    <nav class="primary">
+      <ul each="links">
+        <li include="link"></li>
+      </ul>
+    </nav>
+  </if>
+  <if array="secondary-links">
+    <nav class="secondary">
+      <ul each="secondary-links">
+        <li include="link"></li>
+      </ul>
+    </nav>
+  </if>
+</header>
