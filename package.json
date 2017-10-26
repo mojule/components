@@ -1,6 +1,6 @@
 {
   "name": "@mojule/components",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Component system for mojule",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "@mojule/dom-utils": "^0.1.4",
     "@mojule/flatten": "^0.1.3",
     "@mojule/grid": "^1.0.0",
-    "@mojule/render-components": "^2.0.6",
+    "@mojule/render-components": "^2.0.7",
     "@mojule/vfs": "^1.1.0",
     "commonmark": "^0.28.1",
     "pify": "^3.0.0"
