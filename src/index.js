@@ -5,8 +5,8 @@ const TransformComponents = require( './transform-components' )
 const Render = require( '@mojule/render-components' )
 const getValues = require( '@mojule/render-components/src/get-values' )
 
-const Components = ( components, document ) => {
-  const render = Render( components, document )
+const Components = ( components, options ) => {
+  const render = Render( components, options )
   const api = Object.assign( getValues( components ), { render } )
 
   return api

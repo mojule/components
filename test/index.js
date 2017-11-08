@@ -29,7 +29,7 @@ describe( 'Components', () => {
       assert( is.object( components ) )
       assert( Object.keys( components ).length > 0 )
 
-      componentApi = Components( components, document )
+      componentApi = Components( components, { document } )
 
       done()
     })
